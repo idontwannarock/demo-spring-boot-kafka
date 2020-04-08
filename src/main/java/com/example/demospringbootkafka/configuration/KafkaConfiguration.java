@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
+import org.springframework.kafka.listener.ContainerProperties;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ public class KafkaConfiguration {
     public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
+        factory.setReplyTemplate(kafkaTemplate());
         return factory;
     }
 
@@ -54,6 +56,28 @@ public class KafkaConfiguration {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         // 值的反序列化方式
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        return props;
+    }
+
+    @Bean("batchContainerFactory")
+    public ConcurrentKafkaListenerContainerFactory<String, String> batchContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, String> container = new ConcurrentKafkaListenerContainerFactory<>();
+        container.setConsumerFactory(new DefaultKafkaConsumerFactory<>(batchConsumerProps()));
+        // 設定併發量，需小於或等於 Topic 的 partition 數
+        container.setConcurrency(1);
+        // 設定為批次監聽
+        container.setBatchListener(true);
+        // 設定手動 ack
+        container.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
+        return container;
+    }
+
+    private Map<String, Object> batchConsumerProps() {
+        Map<String, Object> props = consumerProps();
+        // 一次拉取消息數量
+        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "5");
+        // 是否自動提交
+        props.replace(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true, false);
         return props;
     }
 
