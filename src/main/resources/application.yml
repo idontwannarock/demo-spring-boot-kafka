@@ -17,3 +17,7 @@ spring:
     url: ${datasource.url}
     username: ${datasource.username}
     password: ${datasource.password}
+  kafka:
+    bootstrap-servers: ${kafka.boostrap-servers}
+    consumer:
+      group-id: ${kafka.consumer.group-id}
