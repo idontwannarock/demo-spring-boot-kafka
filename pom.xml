@@ -2,20 +2,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.example</groupId>
+	<artifactId>demo-spring-boot-kafka</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>demo-spring-boot-kafka</name>
+	<description>Demo project for Spring Boot integrating with Kafka</description>
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.2.6.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>demo-spring-boot-kafka</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>demo-spring-boot-kafka</name>
-	<description>Demo project for Spring Boot</description>
 
 	<properties>
 		<java.version>11</java.version>
+
+		<springfox.versrion>2.9.2</springfox.versrion>
+		<opencsv.version>4.1</opencsv.version>
+		<opencc.version>1.0.2</opencc.version>
 	</properties>
 
 	<dependencies>
@@ -48,11 +53,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.kafka</groupId>
-			<artifactId>kafka-streams</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
@@ -62,12 +62,26 @@
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<version>2.9.2</version>
+			<version>${springfox.versrion}</version>
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.9.2</version>
+			<version>${springfox.versrion}</version>
+		</dependency>
+
+		<!-- Open CSV -->
+		<dependency>
+			<groupId>com.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>${opencsv.version}</version>
+		</dependency>
+
+		<!-- Simplified Traditional Chinese Converter -->
+		<dependency>
+			<groupId>com.github.houbb</groupId>
+			<artifactId>opencc4j</artifactId>
+			<version>${opencc.version}</version>
 		</dependency>
 
 		<dependency>
