@@ -64,7 +64,7 @@ public class KafkaConfiguration {
         ConcurrentKafkaListenerContainerFactory<String, String> container = new ConcurrentKafkaListenerContainerFactory<>();
         container.setConsumerFactory(new DefaultKafkaConsumerFactory<>(batchConsumerProps()));
         // 設定併發量，需小於或等於 Topic 的 partition 數
-        container.setConcurrency(1);
+        container.setConcurrency(2);
         // 設定為批次監聽
         container.setBatchListener(true);
         // 設定手動 ack

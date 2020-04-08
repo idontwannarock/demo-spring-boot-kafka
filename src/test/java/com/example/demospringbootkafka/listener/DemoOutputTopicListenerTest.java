@@ -16,7 +16,7 @@ public class DemoOutputTopicListenerTest {
 
     @Test
     public void testBatchListen() throws InterruptedException {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1000; i++) {
             kafkaTemplate.send("topic.demo.input", "demo message " + (i + 1));
         }
         // 休眠 5 秒，為了使監聽器有足夠的時間監聽到 topic 的 message
