@@ -21,3 +21,8 @@ spring:
     bootstrap-servers: ${kafka.boostrap-servers}
     consumer:
       group-id: ${kafka.consumer.group-id}
+kafka:
+  topics:
+    demo:
+      input: topic.demo.input
+      output: topic.demo.output

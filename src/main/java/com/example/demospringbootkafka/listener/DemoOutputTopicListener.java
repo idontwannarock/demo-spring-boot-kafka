@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 public class DemoOutputTopicListener {
 
-    @KafkaListener(id = "demo.output.listener", topics = "topic.demo.output", containerFactory = "batchContainerFactory")
+    @KafkaListener(id = "demo.output.listener", topics = "${kafka.topics.demo.output}", containerFactory = "batchContainerFactory")
     public void listen(List<String> messages, Acknowledgment acknowledgment) {
         for (String message : messages) {
             log.info("demo output receive: " + message);
