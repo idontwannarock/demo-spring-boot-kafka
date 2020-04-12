@@ -16,25 +16,31 @@ import java.util.concurrent.TimeoutException;
 public class DemoInputTopicProducerResultHandlerTest {
 
     @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
     private DemoInputTopicProducerResultHandler producerListener;
 
     @Test
     public void testProducerListen() throws InterruptedException {
+        DemoInput demoInput = new DemoInput();
+        demoInput.setInput("test producer listen");
         kafkaTemplate.setProducerListener(producerListener);
-        kafkaTemplate.send("topic.demo.input", "test producer listen");
+        kafkaTemplate.send("topic.demo.input", demoInput);
         Thread.sleep(1000);
     }
 
     @Test
     public void testSyncSend() throws ExecutionException, InterruptedException {
-        kafkaTemplate.send("topic.demo.input", "test sync send message").get();
+        DemoInput demoInput = new DemoInput();
+        demoInput.setInput("test sync send message");
+        kafkaTemplate.send("topic.demo.input", demoInput).get();
     }
 
     @Test(expected = TimeoutException.class)
     public void testTimeOut() throws ExecutionException, InterruptedException, TimeoutException {
-        kafkaTemplate.send("topic.demo.input", "test send message timeout").get(1, TimeUnit.MICROSECONDS);
+        DemoInput demoInput = new DemoInput();
+        demoInput.setInput("test send message timeout");
+        kafkaTemplate.send("topic.demo.input", demoInput).get(1, TimeUnit.MICROSECONDS);
     }
 }

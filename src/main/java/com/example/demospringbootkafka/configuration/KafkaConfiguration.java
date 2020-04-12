@@ -11,6 +11,8 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,15 +29,15 @@ public class KafkaConfiguration {
 
     // ConcurrentKafkaListenerContainerFactory 為創建 Kafka 監聽器的工程類，這裡只配置了消費者
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.setReplyTemplate(kafkaTemplate());
         return factory;
     }
 
     // 根據 consumerProps 填寫的參數創建消費者工廠
-    public ConsumerFactory<String, String> consumerFactory() {
+    public ConsumerFactory<String, Object> consumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerProps());
     }
 
@@ -55,13 +57,15 @@ public class KafkaConfiguration {
         // 鍵的反序列化方式
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         // 值的反序列化方式
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        // 設定反序列化信任類別
+        props.put(JsonDeserializer.TRUSTED_PACKAGES, "com.example.demospringbootkafka.producer");
         return props;
     }
 
     @Bean("batchContainerFactory")
-    public ConcurrentKafkaListenerContainerFactory<String, String> batchContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, String> container = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, Object> batchContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Object> container = new ConcurrentKafkaListenerContainerFactory<>();
         container.setConsumerFactory(new DefaultKafkaConsumerFactory<>(batchConsumerProps()));
         // 設定併發量，需小於或等於 Topic 的 partition 數
         container.setConcurrency(2);
@@ -83,12 +87,12 @@ public class KafkaConfiguration {
 
     // kafkaTemplate 實作 Kafka 發送接收等功能
     @Bean
-    public KafkaTemplate<String, String> kafkaTemplate() {
+    public KafkaTemplate<String, Object> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
     // 根據 senderProps 填寫的參數創建生產者工廠
-    public ProducerFactory<String, String> producerFactory() {
+    public ProducerFactory<String, Object> producerFactory() {
         return new DefaultKafkaProducerFactory<>(senderProps());
     }
 
@@ -108,7 +112,7 @@ public class KafkaConfiguration {
         // 鍵的序列化方式
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         // 值的序列化方式
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return props;
     }
 }

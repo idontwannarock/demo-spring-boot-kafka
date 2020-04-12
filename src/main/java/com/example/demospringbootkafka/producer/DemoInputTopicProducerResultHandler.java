@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class DemoInputTopicProducerResultHandler implements ProducerListener<String, String> {
+public class DemoInputTopicProducerResultHandler implements ProducerListener<String, Object> {
 
     @Override
     public void onSuccess(ProducerRecord producerRecord, RecordMetadata recordMetadata) {
