@@ -18,9 +18,12 @@ public class DemoInputTopicListener {
     private String demoOutputTopicName;
 
     // 聲明 listener id，監聽 topicName 為 topic.demo.input 的 topic
-    @KafkaListener(id = "demo.input.listener", topics = "${kafka.topics.demo.input}")
+    @KafkaListener(
+            id = "demo.input.listener",
+            idIsGroup = false,
+            topics = "${kafka.topics.demo.input}")
     public Message<DemoOutput> forward(Message<DemoInput> input) {
-        log.info("demo input receive : " + input);
+        log.info("demo input receive : " + input.getPayload());
         DemoOutput output = new DemoOutput();
         output.setOutput(input.getPayload().getInput());
         return MessageBuilder

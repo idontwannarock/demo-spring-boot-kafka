@@ -14,14 +14,21 @@ import java.util.List;
 @Component
 public class DemoOutputTopicListener {
 
-    @KafkaListener(id = "demo.output.listener", topics = "${kafka.topics.demo.output}", containerFactory = "batchContainerFactory")
+    @KafkaListener(
+            id = "demo.output.listener",
+            idIsGroup = false,
+            topics = "${kafka.topics.demo.output}",
+            containerFactory = "batchContainerFactory")
     public void listen(
             @Payload List<Message<DemoOutput>> messages,
             Acknowledgment acknowledgment) {
         for (Message<DemoOutput> message : messages) {
-            log.info("demo output receive: " + message.getPayload());
+            String partition = String.valueOf(message.getHeaders().get("kafka_receivedPartitionId"));
+            String offset = String.valueOf(message.getHeaders().get("kafka_offset"));
+            String groupId = String.valueOf(message.getHeaders().get("kafka_groupId"));
+            log.info("Partition " + partition + " offset " + offset + " group " + groupId + ": " + message.getPayload().getOutput());
         }
-        log.info("batch received message count: " + messages.size());
+//        log.info("batch received message count: " + messages.size());
         acknowledgment.acknowledge();
     }
 }
