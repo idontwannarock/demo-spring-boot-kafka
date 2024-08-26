@@ -18,7 +18,7 @@
 	<properties>
 		<java.version>11</java.version>
 
-		<springfox.versrion>2.9.2</springfox.versrion>
+		<springfox.versrion>2.10.0</springfox.versrion>
 		<opencsv.version>4.1</opencsv.version>
 		<opencc.version>1.0.2</opencc.version>
 	</properties>
